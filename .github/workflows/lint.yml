@@ -19,3 +19,17 @@ jobs:
         run: npm ci
       - name: Run linters
         run: npm run lint
+
+  commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Node modules
+        run: npm ci
+      - name: Check commit message format
+        run: echo ${{ github.event.head_commit.message }} | npx commitlint
