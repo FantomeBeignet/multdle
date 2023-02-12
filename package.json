@@ -37,6 +37,9 @@
 		"trpc-sveltekit": "^3.2.9"
 	},
 	"lint-staged": {
-		"*.{html,js,ts,css,scss,svelte}": ["prettier --plugin-search-dir . --write", "eslint --fix"]
+		"*.{html,js,ts,css,scss,svelte,json}": [
+			"prettier --plugin-search-dir . --write",
+			"eslint --fix"
+		]
 	}
 }
