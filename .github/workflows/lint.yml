@@ -6,13 +6,16 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run lint
+      - name: Install Node modules
+        run: npm ci
+      - name: Run linters
+        run: npm run lint
