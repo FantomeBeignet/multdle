@@ -1,12 +1,9 @@
-name: Lint files
+name: Check commit message
 on:
   push:
-    branches:
-      - master
-  pull_request:
   workflow_dispatch:
 jobs:
-  lint:
+  commit-message:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,5 +14,6 @@ jobs:
           node-version: 18
       - name: Install Node modules
         run: npm ci
-      - name: Run linters
-        run: npm run lint
+      - name: Check commit message format
+        run: echo ${{ github.event.head_commit.message }} | npx commitlint
+  
