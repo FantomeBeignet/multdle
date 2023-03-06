@@ -17,6 +17,7 @@
 		"@commitlint/config-conventional": "^17.4.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
+		"@types/node": "^18.14.6",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.13",
@@ -41,6 +42,7 @@
 		"@trpc/client": "^10.11.0",
 		"@trpc/server": "^10.11.0",
 		"flowbite": "^1.6.3",
+		"ioredis": "^5.3.1",
 		"trpc-sveltekit": "^3.2.9"
 	},
 	"lint-staged": {
