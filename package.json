@@ -41,6 +41,7 @@
 	"dependencies": {
 		"@trpc/client": "^10.11.0",
 		"@trpc/server": "^10.11.0",
+		"@vercel/analytics": "^0.1.11",
 		"flowbite": "^1.6.3",
 		"ioredis": "^5.3.1",
 		"trpc-sveltekit": "^3.2.9"
