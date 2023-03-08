@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-vercel": "^2.3.1",
 		"@trpc/client": "^10.11.0",
 		"@trpc/server": "^10.11.0",
 		"@vercel/analytics": "^0.1.11",
