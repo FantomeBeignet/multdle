@@ -1,12 +1,3 @@
-<script>
-	import { trpc } from '$lib/trpc/client';
-	import { page } from '$app/stores';
-
-	import { setContext } from 'svelte';
-	const blue_signup = true;
-	setContext('SignupContext', { blue_signup });
-</script>
-
 <nav
 	class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
 >
@@ -55,14 +46,14 @@
 				<li>
 					<a
 						href="/"
-						class="block py-2 pl-3 pr-4 text-white class:bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+						class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
 						aria-current="page">Home</a
 					>
 				</li>
 				<li>
 					<a
 						href="/rooms"
-						class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+						class="block py-2 pl-3 pr-4 text-white class:bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
 						>Rooms</a
 					>
 				</li>
