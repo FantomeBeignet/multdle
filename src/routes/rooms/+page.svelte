@@ -1,3 +1,7 @@
+<script>
+	import WordleGrid from '../../components/WordleGrid.svelte';
+</script>
+
 <nav
 	class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
 >
@@ -75,3 +79,9 @@
 		</div>
 	</div>
 </nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 outline-none lg:px-8 py-16">
+	<div style="padding-top: 50px" class="mb-8">
+		<WordleGrid />
+	</div>
+</main>
