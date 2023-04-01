@@ -33,7 +33,6 @@
 
 		client = pusherClient($usernameStore);
 		client.bind('pusher:signin_success', (data: unknown) => {
-			console.log(client);
 			channel = client.subscribe(`presence-${roomName}`) as PresenceChannel;
 			channel.bind('pusher:subscription_succeeded', async () => {
 				channel.members.each(async (member: any) => {
