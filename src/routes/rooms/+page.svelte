@@ -80,8 +80,6 @@
 	</div>
 </nav>
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 outline-none lg:px-8 py-16">
-	<div style="padding-top: 50px" class="mb-8">
-		<WordleGrid />
-	</div>
+<main class="flex items-center justify-center h-screen">
+	<WordleGrid />
 </main>
