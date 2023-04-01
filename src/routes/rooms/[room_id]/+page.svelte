@@ -1,5 +1,53 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import { pusherClient } from '$lib/pusher/client';
+	import { trpc } from '$lib/trpc/client';
+	import type { PresenceChannel } from 'pusher-js';
+	import { onMount } from 'svelte';
+	import { usernameStore } from '$lib/stores';
+
+	export let data;
+
+	let channel: PresenceChannel;
+	let members: { id: string; username: string }[] = [];
+
+	const addMember = async (memberId: string) => {
+		const username = await trpc($page).rooms.getMemberUsername.query({
+			room: data.roomName,
+			id: memberId
+		});
+		console.log(username);
+		if (username) {
+			const _members = [...members, { id: memberId, username: username }];
+			members = _members;
+			console.log('new members', members);
+		}
+	};
+
+	onMount(() => {
+		const { roomName } = data;
+
+		channel = pusherClient.subscribe(`presence-${roomName}`) as PresenceChannel;
+		channel.bind('pusher:subscription_succeeded', async () => {
+			var me = channel.members.me;
+			var userId = me.id;
+			await trpc($page).rooms.join.mutate({
+				room: roomName,
+				username: $usernameStore,
+				userId: userId
+			});
+			channel.members.each(async (member: any) => {
+				addMember(member.id);
+			});
+			channel.bind('pusher:member_added', async (member: any) => {
+				addMember(member.id);
+			});
+		});
+	});
+</script>
+
 <nav
-	class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
+	class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full z-20 border-b border-gray-200 dark:border-gray-600"
 >
 	<div class="container flex flex-wrap items-center justify-between mx-auto">
 		<a href="/" class="flex items-center">
@@ -75,3 +123,21 @@
 		</div>
 	</div>
 </nav>
+
+<div class="flex items-center justify-center w-full">
+	<div class="max-w-3xl w-full flex flex-col items-start justify-center p-16 gap-12">
+		<h1 class="dark:text-white font-semibold text-2xl">Room name: {data.roomName}</h1>
+		<div class="flex flex-col items-center justify-center gap-4">
+			<p class="dark:text-white font-semibold text-xl">Players:</p>
+			<div class="flex -space-x-4">
+				{#each members as member (member)}
+					<img
+						class="w-10 h-10 rounded-full dark:border-gray-800"
+						src={`https://avatar.fantomebeig.net/linear/${member.username}?initial`}
+						alt=""
+					/>
+				{/each}
+			</div>
+		</div>
+	</div>
+</div>
