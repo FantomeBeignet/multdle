@@ -82,7 +82,7 @@
 				class="bg-white w-10 h-10 border-2 border-gray-300 rounded-md flex items-center justify-center text-center font-medium text-gray-900 cursor-text outline-none focus:ring-2 ring-indigo-500"
 				value={cell}
 				on:window:keydown|preventDefault={handleKeyDown}
-				readonly={rowIndex !== currentRow}
+				disabled={rowIndex !== currentRow}
 				on:input={(event) => {
 					grid[rowIndex][cellIndex] = event.target.value.toUpperCase();
 					grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
