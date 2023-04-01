@@ -1,21 +1,18 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { pusherClient } from '$lib/pusher/client';
-	import { trpc } from '$lib/trpc/client';
 	import type { PresenceChannel } from 'pusher-js';
 	import { onMount } from 'svelte';
 	import { usernameStore } from '$lib/stores';
+	import type Pusher from 'pusher-js';
 
 	export let data;
+
+	let client: Pusher;
 
 	let channel: PresenceChannel;
 	let members: { id: string; username: string }[] = [];
 
-	const addMember = async (memberId: string) => {
-		const username = await trpc($page).rooms.getMemberUsername.query({
-			room: data.roomName,
-			id: memberId
-		});
+	const addMember = async (memberId: string, username: string) => {
 		if (username) {
 			const _members = [...members, { id: memberId, username: username }];
 			members = _members;
@@ -32,25 +29,22 @@
 	onMount(() => {
 		const { roomName } = data;
 
-		channel = pusherClient.subscribe(`presence-${roomName}`) as PresenceChannel;
-		channel.bind('pusher:subscription_succeeded', async () => {
-			var me = channel.members.me;
-			var userId = me.id;
-			await trpc($page).rooms.join.mutate({
-				room: roomName,
-				username: $usernameStore,
-				userId: userId
-			});
-			channel.members.each(async (member: any) => {
-				addMember(member.id);
-			});
-			channel.bind('pusher:member_added', async (member: any) => {
-				addMember(member.id);
-			});
-			channel.bind('pusher:member_removed', async (member: any) => {
-				removeMember(member.id);
+		client = pusherClient($usernameStore);
+		client.bind('pusher:signin_success', (data: unknown) => {
+			channel = client.subscribe(`presence-${roomName}`) as PresenceChannel;
+			channel.bind('pusher:subscription_succeeded', async () => {
+				channel.members.each(async (member: any) => {
+					addMember(member.id, member.info?.username);
+				});
+				channel.bind('pusher:member_added', async (member: any) => {
+					addMember(member.id, member.info?.username);
+				});
+				channel.bind('pusher:member_removed', async (member: any) => {
+					removeMember(member.id);
+				});
 			});
 		});
+		client.signin();
 	});
 </script>
 
