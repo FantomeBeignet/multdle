@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 	import { usernameStore } from '$lib/stores';
 	import type Pusher from 'pusher-js';
+	import { trpc } from '$lib/trpc/client';
+	import { page } from '$app/stores';
 
 	export let data;
 
@@ -31,6 +33,7 @@
 
 		client = pusherClient($usernameStore);
 		client.bind('pusher:signin_success', (data: unknown) => {
+			console.log(client);
 			channel = client.subscribe(`presence-${roomName}`) as PresenceChannel;
 			channel.bind('pusher:subscription_succeeded', async () => {
 				channel.members.each(async (member: any) => {
@@ -45,6 +48,9 @@
 			});
 		});
 		client.signin();
+		client.connection.bind('disconnected', async () => {
+			await trpc($page).sockets.remove.mutate(client.connection.socket_id);
+		});
 	});
 </script>
 
