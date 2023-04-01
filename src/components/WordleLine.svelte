@@ -1,5 +1,7 @@
 <script>
 	import Cell from './Cell.svelte';
+	export let line;
+	export let lineIndex;
 	export const grid = [
 		{ id: 1, value: '' },
 		{ id: 2, value: '' },
