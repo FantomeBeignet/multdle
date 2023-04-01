@@ -16,12 +16,17 @@
 			room: data.roomName,
 			id: memberId
 		});
-		console.log(username);
 		if (username) {
 			const _members = [...members, { id: memberId, username: username }];
 			members = _members;
-			console.log('new members', members);
 		}
+	};
+
+	const removeMember = async (memberId: string) => {
+		const _members = members.filter(({ id, username }) => {
+			id !== memberId;
+		});
+		members = _members;
 	};
 
 	onMount(() => {
@@ -41,6 +46,9 @@
 			});
 			channel.bind('pusher:member_added', async (member: any) => {
 				addMember(member.id);
+			});
+			channel.bind('pusher:member_removed', async (member: any) => {
+				removeMember(member.id);
 			});
 		});
 	});
