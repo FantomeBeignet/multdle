@@ -18,6 +18,14 @@
 		['', '', '', '', '']
 	];
 
+	const classes = [
+		['', '', '', '', ''],
+		['', '', '', '', ''],
+		['', '', '', '', ''],
+		['', '', '', '', ''],
+		['', '', '', '', '']
+	];
+
 	let currentRow = 0;
 
 	function verifyWord(wordToFind, userWord) {
@@ -45,13 +53,13 @@
 			}
 		}
 		console.log(correctIndexes, misplacedIndexes);
-		// Mise à jour de la grille (pas encore correcte, à modifier
+		// Mise à jour de la grille
 		for (let i = 0; i < wordToFind.length; i++) {
 			const cell = grid[currentRow][i];
 			if (correctIndexes.includes(i)) {
-				grid[currentRow][i] = `<span class="text-green-500">${cell}</span>`;
+				classes[currentRow][i] = 'bg-green-400';
 			} else if (misplacedIndexes.includes(i)) {
-				grid[currentRow][i] = `<span class="text-orange-500">${cell}</span>`;
+				classes[currentRow][i] = 'bg-yellow-500';
 			}
 		}
 
@@ -65,6 +73,7 @@
 		if (rowIndex === -1 && cellIndex === -1) {
 			gameLost = 1;
 		}
+		classes[rowIndex][cellIndex] = ''; // efface les classes pour éviter les conflits avec les nouvelles classes
 		grid[rowIndex][cellIndex] = letter.toUpperCase();
 	}
 
@@ -104,11 +113,14 @@
 		{#each row as cell, cellIndex}
 			<input
 				type="text"
-				class="bg-white w-10 h-10 border-2 border-gray-300 rounded-md flex items-center justify-center text-center font-medium text-gray-900 cursor-text outline-none focus:ring-2 ring-indigo-500"
+				class="bg-white w-10 h-10 border-2 border-gray-300 rounded-md flex items-center justify-center text-center font-medium text-gray-900 cursor-text outline-none focus:ring-2 ring-indigo-500 {classes[
+					rowIndex
+				][cellIndex]}"
 				value={cell}
 				disabled={rowIndex !== currentRow}
 				on:input={(event) => {
 					grid[rowIndex][cellIndex] = event.target.value.toUpperCase();
+					classes[rowIndex][cellIndex] = ''; // efface les classes pour éviter les conflits avec les nouvelles classes
 					grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 				}}
 			/>
