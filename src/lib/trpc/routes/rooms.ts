@@ -9,6 +9,9 @@ export const rooms = t.router({
 		await redis.sadd('rooms', roomName);
 		return roomName;
 	}),
+	delete: t.procedure.input(z.string()).mutation(async ({ input }) => {
+		return await redis.srem('rooms', input);
+	}),
 	exists: t.procedure.input(z.string()).query(async ({ input }) => {
 		return await redis.sismember('rooms', input);
 	})
