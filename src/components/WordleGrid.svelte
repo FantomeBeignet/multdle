@@ -91,6 +91,10 @@
 		if (event.key === 'Enter') {
 			verifyWord(wordToFind, getCurrentWord());
 			currentRow = (currentRow + 1) % 5;
+			const { rowIndex, cellIndex } = getNextLetter();
+			if (gameWon !== 1 && rowIndex === -1 && cellIndex === -1) {
+				gameLost = 1;
+			}
 			grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 		} else if (isLetter) {
 			writeLetter(event.key, getNextLetter());
