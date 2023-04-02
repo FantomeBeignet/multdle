@@ -55,7 +55,6 @@
 		console.log(correctIndexes, misplacedIndexes);
 		// Mise à jour de la grille
 		for (let i = 0; i < wordToFind.length; i++) {
-			const cell = grid[currentRow][i];
 			if (correctIndexes.includes(i)) {
 				classes[currentRow][i] = 'bg-green-400';
 			} else if (misplacedIndexes.includes(i)) {
