@@ -86,11 +86,15 @@
 
 	function handleKeyDown(event) {
 		console.log('handleKeyDown called with event:', event);
+		const key = event.key.toUpperCase();
+		const isLetter = /^[A-Z]$/.test(key);
 		if (event.key === 'Enter') {
 			verifyWord(wordToFind, getCurrentWord());
 			currentRow = (currentRow + 1) % 5;
 			grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
-		} else writeLetter(event.key, getNextLetter());
+		} else if (isLetter) {
+			writeLetter(event.key, getNextLetter());
+		}
 	}
 
 	function getNextLetter() {
