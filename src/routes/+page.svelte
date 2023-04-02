@@ -4,7 +4,7 @@
 	setContext('SignupContext', { blue_signup });
 </script>
 
-<div class="flex flex-col items-center justify-center w-full p-32 gap-6">
+<div class="flex flex-col items-center justify-center w-full p-10 lg:p-32 gap-4 lg:gap-6">
 	<h1
 		class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
 	>
