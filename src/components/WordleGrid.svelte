@@ -1,5 +1,8 @@
 <script>
 	import { words } from './words.js';
+
+	let gameWon;
+	let gameLost;
 	function selectRandomWord(words) {
 		const randomIndex = Math.floor(Math.random() * words.length);
 		return words[randomIndex];
@@ -53,9 +56,15 @@
 		}
 
 		grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
+		if (correctIndexes.length === 5) {
+			gameWon = 1;
+		}
 	}
 
 	function writeLetter(letter, { rowIndex, cellIndex }) {
+		if (rowIndex === -1 && cellIndex === -1) {
+			gameLost = 1;
+		}
 		grid[rowIndex][cellIndex] = letter.toUpperCase();
 	}
 
@@ -105,4 +114,18 @@
 			/>
 		{/each}
 	{/each}
+</div>
+
+<div class="grid grid-cols-5 gap-4">
+	<!-- Votre grille de jeu ici -->
+</div>
+
+<div class="mt-4 text-center">
+	{#if gameWon}
+		<p class="text-green-500 font-bold">Victoire !</p>
+	{:else if gameLost}
+		<p class="text-red-500 font-bold">Défaite :(</p>
+	{:else}
+		<p class="text-gray-500">Bonne chance !</p>
+	{/if}
 </div>
