@@ -12,20 +12,30 @@
 	let client: Pusher;
 
 	let channel: PresenceChannel;
-	let members: { id: string; username: string }[] = [];
+	let membersPlaying: { id: string; username: string }[] = [];
+	let membersDone: { id: string; username: string }[] = [];
 
 	const addMember = async (memberId: string, username: string) => {
 		if (username) {
-			const _members = [...members, { id: memberId, username: username }];
-			members = _members;
+			const _members = [...membersPlaying, { id: memberId, username: username }];
+			membersPlaying = _members;
 		}
 	};
 
 	const removeMember = async (memberId: string) => {
-		const _members = members.filter(({ id, username }) => {
+		const _members = membersPlaying.filter(({ id, username }) => {
 			id !== memberId;
 		});
-		members = _members;
+		membersPlaying = _members;
+	};
+
+	const markMemberDone = async (memberId: string) => {
+		const member = membersPlaying.find((member) => member.id === memberId);
+		if (!member) return;
+		const newDone = [...membersDone, member];
+		membersDone = newDone;
+		const newPlaying = membersPlaying.filter((member) => member !== member);
+		membersPlaying = newPlaying;
 	};
 
 	onMount(() => {
@@ -59,17 +69,39 @@
 
 <div class="flex items-center justify-center w-full">
 	<div class="max-w-3xl w-full flex flex-col items-start justify-center p-16 gap-12">
-		<div class="flex flex-col items-center justify-center gap-4">
-			<p class="dark:text-white font-semibold text-xl">Players:</p>
-			<div class="flex -space-x-4">
-				{#each members as member (member)}
-					<img
-						class="w-10 h-10 rounded-full dark:border-gray-800"
-						src={`https://avatar.fantomebeig.net/linear/${member.username}?initial`}
-						alt=""
-					/>
-				{/each}
+		<div class="grid grid-cols-2 w-full">
+			<div class="flex flex-col items-start justify-center gap-4">
+				<p class="dark:text-white font-semibold text-xl">Playing</p>
+				<div class="flex -space-x-4">
+					{#each membersPlaying as member (member)}
+						<img
+							class="w-10 h-10 rounded-full dark:border-gray-800"
+							src={`https://avatar.fantomebeig.net/linear/${member.username}?initial`}
+							alt=""
+						/>
+					{/each}
+				</div>
+			</div>
+			<div class="flex flex-col items-end justify-center gap-4">
+				<p class="dark:text-white font-semibold text-xl">Done</p>
+				<div class="flex flex-row-reverse avatars-reversed">
+					{#each membersDone as member (member)}
+						<img
+							class="w-10 h-10 rounded-full dark:border-gray-800"
+							src={`https://avatar.fantomebeig.net/linear/${member.username}?initial`}
+							alt=""
+						/>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<style>
+	.avatars-reversed > :not([hidden]) ~ :not([hidden]) {
+		--tw-space-x-reverse: 0;
+		margin-left: calc(-1rem * var(--tw-space-x-reverse));
+		margin-right: calc(-1rem * calc(1 - var(--tw-space-x-reverse)));
+	}
+</style>
