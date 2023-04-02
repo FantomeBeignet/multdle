@@ -50,6 +50,7 @@
 				channel.bind('pusher:member_removed', async (member: any) => {
 					removeMember(member.id);
 				});
+				channel.bind('start', () => goto(`/play/${roomName}`));
 			});
 		});
 		client.signin();
