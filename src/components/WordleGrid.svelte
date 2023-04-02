@@ -19,6 +19,7 @@
 
 	function verifyWord(wordToFind, userWord) {
 		console.log(wordToFind, userWord);
+		wordToFind = wordToFind.toUpperCase();
 		const correctIndexes = [];
 		const misplacedIndexes = [];
 
@@ -40,7 +41,7 @@
 				}
 			}
 		}
-
+		console.log(correctIndexes, misplacedIndexes);
 		// Mise à jour de la grille (pas encore correcte, à modifier
 		for (let i = 0; i < wordToFind.length; i++) {
 			const cell = grid[currentRow][i];
