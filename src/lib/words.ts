@@ -1381,4 +1381,4 @@ const words = [
 	'zones'
 ];
 
-export const getRandomWord = (seed: number) => words[seed % words.length];
+export const getRandomWord = (seed: number) => words[Math.abs(seed) % words.length];
