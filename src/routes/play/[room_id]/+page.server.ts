@@ -5,7 +5,8 @@ import { caller } from '$lib/trpc/router';
 export async function load({ params }) {
 	if (await caller.games.exists(params.room_id)) {
 		return {
-			roomName: params.room_id
+			roomName: params.room_id,
+			word: caller.games.getWord(params.room_id)
 		};
 	}
 
