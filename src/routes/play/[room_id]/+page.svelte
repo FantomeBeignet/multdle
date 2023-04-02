@@ -29,13 +29,18 @@
 		membersPlaying = _members;
 	};
 
-	const markMemberDone = async (memberId: string) => {
+	const markMemberDone = (memberId: string) => {
 		const member = membersPlaying.find((member) => member.id === memberId);
 		if (!member) return;
 		const newDone = [...membersDone, member];
 		membersDone = newDone;
 		const newPlaying = membersPlaying.filter((member) => member !== member);
 		membersPlaying = newPlaying;
+	};
+
+	const triggerDone = () => {
+		channel.trigger('client-done', {});
+		markMemberDone(client.user.user_data.id);
 	};
 
 	onMount(() => {
@@ -53,6 +58,9 @@
 				});
 				channel.bind('pusher:member_removed', async (member: any) => {
 					removeMember(member.id);
+				});
+				channel.bind('client-done', (data: any, metadata: any) => {
+					markMemberDone(metadata.user_id);
 				});
 			});
 		});
