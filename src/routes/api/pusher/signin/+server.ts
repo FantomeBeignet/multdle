@@ -9,7 +9,7 @@ export async function POST({ request }) {
 	const socketId = formData.get('socket_id') as string | null;
 	const username = formData.get('username') as string | null;
 	if (socketId == null || username == null) throw error(403);
-	await redis.set(`socket:${socketId}`, username);
+	await redis.set(`socket:${socketId}`, username, 'EX', 7200);
 	const authResponse = pusherServer.authenticateUser(socketId, {
 		id: uuid(),
 		user_info: { username: username }
