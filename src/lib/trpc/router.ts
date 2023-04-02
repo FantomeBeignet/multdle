@@ -1,10 +1,16 @@
 import { t } from '$lib/trpc/t';
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
-import { greeting } from '$lib/trpc/routes/greeting';
+import { rooms } from '$lib/trpc/routes/rooms';
+import { sockets } from '$lib/trpc/routes/sockets';
+import { games } from '$lib/trpc/routes/games';
 
 export const router = t.router({
-	greeting
+	rooms,
+	sockets,
+	games
 });
+
+export const caller = router.createCaller({});
 
 export type Router = typeof router;
 

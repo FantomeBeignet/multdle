@@ -7,13 +7,12 @@ import { randomUUID as uuid } from 'crypto';
 export async function POST({ request }) {
 	const formData = await request.formData();
 	const socketId = formData.get('socket_id') as string | null;
-	const channelName = formData.get('channel_name') as string | null;
-	if (socketId == null || channelName == null) throw error(403);
-	const username = await redis.get(`socket:${socketId}`);
-	const presenceData = {
-		user_id: uuid(),
+	const username = formData.get('username') as string | null;
+	if (socketId == null || username == null) throw error(403);
+	await redis.set(`socket:${socketId}`, username);
+	const authResponse = pusherServer.authenticateUser(socketId, {
+		id: uuid(),
 		user_info: { username: username }
-	};
-	const authResponse = pusherServer.authorizeChannel(socketId, channelName, presenceData);
+	});
 	return new Response(JSON.stringify(authResponse));
 }
