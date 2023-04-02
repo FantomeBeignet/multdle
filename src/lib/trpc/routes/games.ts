@@ -4,7 +4,7 @@ import { redis } from '$lib/redis';
 import { caller } from '$lib/trpc/router';
 import { pusherServer } from '$lib/pusher/server';
 import { getRandomWord } from '$lib/words';
-import { createHash, createHmac } from 'crypto';
+import { createHash } from 'crypto';
 
 export const games = t.router({
 	start: t.procedure.input(z.string()).mutation(async ({ input }) => {
