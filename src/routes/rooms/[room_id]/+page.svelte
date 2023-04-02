@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { pusherClient } from '$lib/pusher/client';
 	import type { PresenceChannel } from 'pusher-js';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { usernameStore } from '$lib/stores';
 	import type Pusher from 'pusher-js';
 	import { trpc } from '$lib/trpc/client';
@@ -50,6 +50,10 @@
 		client.connection.bind('disconnected', async () => {
 			await trpc($page).sockets.remove.mutate(client.connection.socket_id);
 		});
+	});
+
+	onDestroy(() => {
+		client.disconnect();
 	});
 </script>
 
