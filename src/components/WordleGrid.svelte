@@ -1,6 +1,5 @@
 <script>
 	import { words } from './words.js';
-
 	function selectRandomWord(words) {
 		const randomIndex = Math.floor(Math.random() * words.length);
 		return words[randomIndex];
@@ -55,6 +54,10 @@
 		grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 	}
 
+	function writeLetter(letter, { rowIndex, cellIndex }) {
+		grid[rowIndex][cellIndex] = letter.toUpperCase();
+	}
+
 	function getCurrentWord() {
 		let word = '';
 		grid[currentRow].forEach((letter) => {
@@ -64,15 +67,27 @@
 	}
 
 	function handleKeyDown(event) {
-		event.preventDefault();
 		console.log('handleKeyDown called with event:', event);
 		if (event.key === 'Enter') {
 			verifyWord(wordToFind, getCurrentWord());
 			currentRow = (currentRow + 1) % 5;
 			grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
+		} else writeLetter(event.key, getNextLetter());
+	}
+
+	function getNextLetter() {
+		for (let rowIndex = currentRow; rowIndex < grid.length; rowIndex++) {
+			for (let cellIndex = 0; cellIndex < grid[rowIndex].length; cellIndex++) {
+				if (!grid[rowIndex][cellIndex]) {
+					return { rowIndex, cellIndex };
+				}
+			}
 		}
+		return { rowIndex: -1, cellIndex: -1 }; // retourne une coordonnée invalide s'il n'y a plus de cases vides
 	}
 </script>
+
+<svelte:window on:keydown={handleKeyDown} />
 
 <div class="grid grid-cols-5 gap-4">
 	{#each grid as row, rowIndex}
@@ -81,7 +96,6 @@
 				type="text"
 				class="bg-white w-10 h-10 border-2 border-gray-300 rounded-md flex items-center justify-center text-center font-medium text-gray-900 cursor-text outline-none focus:ring-2 ring-indigo-500"
 				value={cell}
-				on:window:keydown|preventDefault={handleKeyDown}
 				disabled={rowIndex !== currentRow}
 				on:input={(event) => {
 					grid[rowIndex][cellIndex] = event.target.value.toUpperCase();
