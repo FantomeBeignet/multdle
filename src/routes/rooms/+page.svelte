@@ -42,8 +42,13 @@
 	};
 </script>
 
-<div class="flex items-center justify-center w-full ">
-	<div class="flex flex-col flex-1 items-center justify-center max-w-xl py-32 gap-10">
+<div class="flex items-center justify-center w-full">
+	<div class="flex flex-col flex-1 items-center justify-center max-w-xl p-10 lg:py-32 gap-10">
+		<h1
+			class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+		>
+			Play with friends
+		</h1>
 		<div class="flex flex-col items-center w-full gap-6">
 			<div class="relative z-0 group w-full">
 				<input
@@ -70,7 +75,13 @@
 				>
 			</div>
 		</div>
-		<span class="w-full text-center font-semibold dark:text-white">OR</span>
+		<div class="inline-flex items-center justify-center w-full">
+			<hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+			<span
+				class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900"
+				>or</span
+			>
+		</div>
 		<div class="flex flex-col items-center w-full gap-6">
 			<div class="relative z-0 group w-full">
 				<input
