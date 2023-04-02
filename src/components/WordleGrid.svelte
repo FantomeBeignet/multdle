@@ -116,11 +116,7 @@
 	{/each}
 </div>
 
-<div class="grid grid-cols-5 gap-4">
-	<!-- Votre grille de jeu ici -->
-</div>
-
-<div class="mt-4 text-center">
+<div style="padding-left:50px" class="mt-4 text-center">
 	{#if gameWon}
 		<p class="text-green-500 font-bold">Victoire !</p>
 	{:else if gameLost}
