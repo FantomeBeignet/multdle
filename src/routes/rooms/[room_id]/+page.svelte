@@ -6,6 +6,7 @@
 	import type Pusher from 'pusher-js';
 	import { trpc } from '$lib/trpc/client';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -26,6 +27,11 @@
 			id !== memberId;
 		});
 		members = _members;
+	};
+
+	const startGame = async () => {
+		await trpc($page).games.start.mutate(data.roomName);
+		goto(`/play/${data.roomName}`);
 	};
 
 	onMount(() => {
@@ -149,6 +155,12 @@
 					/>
 				{/each}
 			</div>
+		</div>
+		<div class="flex items-center justify-center w-full">
+			<button
+				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+				on:click={startGame}>Start game</button
+			>
 		</div>
 	</div>
 </div>
