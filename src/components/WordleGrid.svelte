@@ -42,7 +42,6 @@
 				correctIndexes.push(i);
 			}
 		}
-
 		// Lettres correctes pas aux bons endroits (couleur jaune)
 		for (let i = 0; i < wordToFind.length; i++) {
 			if (!correctIndexes.includes(i)) {
@@ -123,21 +122,10 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div class="grid grid-cols-5 gap-4">
+<div class="grid grid-cols-5 gap-2">
 	{#each grid as row, rowIndex}
 		{#each row as cell, cellIndex}
-			<input
-				type="text"
-				class={classes[rowIndex][cellIndex]}
-				value={cell}
-				disabled={rowIndex !== currentRow}
-				on:input={(event) => {
-					grid[rowIndex][cellIndex] = event.target?.value.toUpperCase();
-					classes[rowIndex][cellIndex] = ''; // efface les classes pour éviter les conflits avec les nouvelles classes
-					// grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
-					grid = grid;
-				}}
-			/>
+			<div class={classes[rowIndex][cellIndex]}>{grid[rowIndex][cellIndex]}</div>
 		{/each}
 	{/each}
 </div>
