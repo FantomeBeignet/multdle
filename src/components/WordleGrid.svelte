@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let targetWord: string;
+	export let onWin: () => void;
 
 	const classDefault =
 		'flex items-center justify-center w-12 h-12 p-2 border lg:w-16 lg:h-16 border-gray-600 bg-gray-900 dark:text-white text-center lg:text-2xl';
@@ -68,6 +69,7 @@
 		grid = grid;
 		if (correctIndexes.length === 5) {
 			gameWon = 1;
+			onWin();
 		}
 	}
 

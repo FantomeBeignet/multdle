@@ -10,6 +10,6 @@
 		>
 			Solo play
 		</h1>
-		<WordleGrid targetWord={data.word} />
+		<WordleGrid targetWord={data.word} onWin={() => undefined} />
 	</div>
 </div>
