@@ -135,13 +135,3 @@
 		{/each}
 	{/each}
 </div>
-
-<div style="padding-left:50px" class="mt-4 text-center">
-	{#if gameWon}
-		<p class="text-green-500 font-bold">Victoire !</p>
-	{:else if gameLost}
-		<p class="text-red-500 font-bold">Défaite :(</p>
-	{:else}
-		<p class="text-gray-500">Bonne chance !</p>
-	{/if}
-</div>
