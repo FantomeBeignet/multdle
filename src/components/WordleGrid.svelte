@@ -100,6 +100,10 @@
 			}
 			// grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 			grid = grid;
+		} else if (event.key === 'Backspace') {
+			const { rowIndex, cellIndex } = getNextLetter();
+			grid[rowIndex][cellIndex - 1] = '';
+			grid = grid;
 		} else if (isLetter && getCurrentWord().length < 5) {
 			writeLetter(event.key, getNextLetter());
 		}
