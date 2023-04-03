@@ -24,9 +24,9 @@
 	};
 
 	const removeMember = async (memberId: string) => {
-		const _members = membersPlaying.filter(({ id, username }) => {
-			id !== memberId;
-		});
+		console.log(membersPlaying);
+		const _members = membersPlaying.filter(({ id, username }) => id !== memberId);
+		console.log(_members);
 		membersPlaying = _members;
 	};
 
@@ -104,7 +104,7 @@
 				</div>
 			</div>
 		</div>
-		<WordleGrid targetWord={data.word} onWin={() => undefined} />
+		<WordleGrid targetWord={data.word} onWin={triggerDone} />
 	</div>
 </div>
 
