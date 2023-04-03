@@ -90,7 +90,7 @@
 	function handleKeyDown(event: KeyboardEvent) {
 		const key = event.key.toUpperCase();
 		const isLetter = /^[A-Z]$/.test(key);
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && getCurrentWord().length === 5) {
 			verifyWord(targetWord, getCurrentWord());
 			currentRow = (currentRow + 1) % 5;
 			const { rowIndex, cellIndex } = getNextLetter();
