@@ -1,8 +1,18 @@
 <script lang="ts">
-	import { number } from 'zod';
-
 	export let targetWord: string;
 	export let onWin: () => void;
+
+	const letterMap = new Map<string, number>();
+	targetWord
+		.toUpperCase()
+		.split('')
+		.forEach((l) => {
+			if (!letterMap.has(l)) letterMap.set(l, 1);
+			else {
+				const count = letterMap.get(l) as number;
+				letterMap.set(l, count + 1);
+			}
+		});
 
 	type Position = { rowIndex: number; cellIndex: number };
 
@@ -40,24 +50,34 @@
 		wordToFind = wordToFind.toUpperCase();
 		const correctIndexes = [];
 		const misplacedIndexes = [];
+		const markedLetters = new Map<string, number>();
 
 		// Lettres correctes aux bons endroits (couleur verte)
 		for (let i = 0; i < wordToFind.length; i++) {
 			if (wordToFind[i] === userWord[i]) {
 				correctIndexes.push(i);
+				if (!markedLetters.has(wordToFind[i])) markedLetters.set(wordToFind[i], 1);
+				else {
+					const count = markedLetters.get(wordToFind[i]) as number;
+					markedLetters.set(wordToFind[i], count + 1);
+				}
 			}
 		}
 		// Lettres correctes pas aux bons endroits (couleur jaune)
-		for (let i = 0; i < wordToFind.length; i++) {
+		for (let i = 0; i < userWord.length; i++) {
 			if (!correctIndexes.includes(i)) {
 				for (let j = 0; j < wordToFind.length; j++) {
-					if (i !== j && wordToFind[j] === userWord[i]) {
+					const markedNumber = markedLetters.get(userWord[i]) ?? 0;
+					const totalNumber = letterMap.get(wordToFind[j]) ?? 0;
+					if (i !== j && wordToFind[j] === userWord[i] && markedNumber < totalNumber) {
 						misplacedIndexes.push(i);
+						markedLetters.set(userWord[i], markedNumber + 1);
 						break;
 					}
 				}
 			}
 		}
+		console.log(markedLetters);
 		// Mise à jour de la grille
 		for (let i = 0; i < wordToFind.length; i++) {
 			if (correctIndexes.includes(i)) {
