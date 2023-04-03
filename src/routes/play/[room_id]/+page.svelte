@@ -103,7 +103,7 @@
 			</div>
 		</div>
 		<div class="flex flex-col w-full items-center justify-center">
-			<WordleGrid targetWord={data.word} onWin={triggerDone} />
+			<WordleGrid targetWord={data.word} onWin={triggerDone} onLose={() => undefined} />
 		</div>
 	</div>
 </div>

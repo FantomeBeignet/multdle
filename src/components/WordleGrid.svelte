@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let targetWord: string;
 	export let onWin: () => void;
+	export let onLose: () => void;
 
 	const letterMap = new Map<string, number>();
 	targetWord
@@ -77,7 +78,6 @@
 				}
 			}
 		}
-		console.log(markedLetters);
 		// Mise à jour de la grille
 		for (let i = 0; i < wordToFind.length; i++) {
 			if (correctIndexes.includes(i)) {
@@ -100,6 +100,7 @@
 	function writeLetter(letter: string, { rowIndex, cellIndex }: Position) {
 		if (rowIndex === -1 && cellIndex === -1) {
 			gameLost = 1;
+			onLose();
 		}
 		classes[rowIndex][cellIndex] = classDefault; // efface les classes pour éviter les conflits avec les nouvelles classes
 		grid[rowIndex][cellIndex] = letter.toUpperCase();

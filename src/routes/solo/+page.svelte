@@ -26,6 +26,9 @@
 				onWin={() => {
 					gameEnded = true;
 				}}
+				onLose={() => {
+					gameEnded = true;
+				}}
 			/>
 		{/key}
 		{#if gameEnded}
