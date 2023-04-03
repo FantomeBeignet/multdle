@@ -1,6 +1,10 @@
 <script lang="ts">
+	import { number } from 'zod';
+
 	export let targetWord: string;
 	export let onWin: () => void;
+
+	type Position = { rowIndex: number; cellIndex: number };
 
 	const classDefault =
 		'flex items-center justify-center w-12 h-12 p-2 border lg:w-16 lg:h-16 border-gray-600 bg-gray-900 dark:text-white text-center lg:text-2xl';
@@ -73,7 +77,7 @@
 		}
 	}
 
-	function writeLetter(letter: string, { rowIndex, cellIndex }) {
+	function writeLetter(letter: string, { rowIndex, cellIndex }: Position) {
 		if (rowIndex === -1 && cellIndex === -1) {
 			gameLost = 1;
 		}
@@ -110,7 +114,7 @@
 		}
 	}
 
-	function getNextLetter() {
+	function getNextLetter(): Position {
 		for (let rowIndex = currentRow; rowIndex < grid.length; rowIndex++) {
 			for (let cellIndex = 0; cellIndex < grid[rowIndex].length; cellIndex++) {
 				if (!grid[rowIndex][cellIndex]) {
