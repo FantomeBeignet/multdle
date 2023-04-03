@@ -24,9 +24,7 @@
 	};
 
 	const removeMember = async (memberId: string) => {
-		console.log(membersPlaying);
 		const _members = membersPlaying.filter(({ id, username }) => id !== memberId);
-		console.log(_members);
 		membersPlaying = _members;
 	};
 
