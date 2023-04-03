@@ -6,6 +6,7 @@
 	import type Pusher from 'pusher-js';
 	import { trpc } from '$lib/trpc/client';
 	import { page } from '$app/stores';
+	import WordleGrid from '../../../components/WordleGrid.svelte';
 
 	export let data;
 
@@ -23,9 +24,7 @@
 	};
 
 	const removeMember = async (memberId: string) => {
-		const _members = membersPlaying.filter(({ id, username }) => {
-			id !== memberId;
-		});
+		const _members = membersPlaying.filter(({ id, username }) => id !== memberId);
 		membersPlaying = _members;
 	};
 
@@ -102,6 +101,9 @@
 					{/each}
 				</div>
 			</div>
+		</div>
+		<div class="flex flex-col w-full items-center justify-center">
+			<WordleGrid targetWord={data.word} onWin={triggerDone} />
 		</div>
 	</div>
 </div>
