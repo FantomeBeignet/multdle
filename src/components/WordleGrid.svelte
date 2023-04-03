@@ -56,7 +56,7 @@
 		// Mise à jour de la grille
 		for (let i = 0; i < wordToFind.length; i++) {
 			if (correctIndexes.includes(i)) {
-				classes[currentRow][i] = 'bg-green-400';
+				classes[currentRow][i] = 'bg-green-300';
 			} else if (misplacedIndexes.includes(i)) {
 				classes[currentRow][i] = 'bg-yellow-500';
 			}
