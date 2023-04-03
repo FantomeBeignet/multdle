@@ -100,7 +100,7 @@
 			}
 			// grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 			grid = grid;
-		} else if (isLetter) {
+		} else if (isLetter && getCurrentWord().length < 5) {
 			writeLetter(event.key, getNextLetter());
 		}
 	}
