@@ -104,7 +104,9 @@
 				</div>
 			</div>
 		</div>
-		<WordleGrid targetWord={data.word} onWin={triggerDone} />
+		<div class="flex flex-col w-full items-center justify-center">
+			<WordleGrid targetWord={data.word} onWin={triggerDone} />
+		</div>
 	</div>
 </div>
 
