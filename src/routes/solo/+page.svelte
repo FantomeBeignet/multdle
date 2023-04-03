@@ -1,4 +1,5 @@
 <script>
+	import WordleGrid from '../../components/WordleGrid.svelte';
 	export let data;
 </script>
 
@@ -9,5 +10,6 @@
 		>
 			Solo play
 		</h1>
+		<WordleGrid targetWord={data.word} />
 	</div>
 </div>

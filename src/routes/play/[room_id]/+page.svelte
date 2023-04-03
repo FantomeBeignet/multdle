@@ -6,6 +6,7 @@
 	import type Pusher from 'pusher-js';
 	import { trpc } from '$lib/trpc/client';
 	import { page } from '$app/stores';
+	import WordleGrid from '../../../components/WordleGrid.svelte';
 
 	export let data;
 
@@ -103,6 +104,7 @@
 				</div>
 			</div>
 		</div>
+		<WordleGrid targetWord={data.word} />
 	</div>
 </div>
 
