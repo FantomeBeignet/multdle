@@ -36,7 +36,8 @@ export const games = t.router({
 	markDone: t.procedure.input(z.string()).mutation(({ input }) => {
 		pusherServer.trigger(`presence-game-${input}`, 'game-end', {});
 	}),
-	restart: t.procedure.input(z.string()).mutation(({ input }) => {
+	restart: t.procedure.input(z.string()).mutation(async ({ input }) => {
+		await redis.del(`game:scoreboard:${input}`);
 		pusherServer.trigger(`presence-game-${input}`, 'restart', {});
 	}),
 	setPlayerTime: t.procedure
