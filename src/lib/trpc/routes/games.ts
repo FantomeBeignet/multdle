@@ -44,7 +44,7 @@ export const games = t.router({
 			z.object({
 				room: z.string(),
 				player: z.string(),
-				time: z.string().datetime().nullable()
+				time: z.string().nullable()
 			})
 		)
 		.mutation(async ({ input }) => {
