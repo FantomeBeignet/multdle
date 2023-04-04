@@ -3,13 +3,14 @@
 	import WordleGrid from '../../components/WordleGrid.svelte';
 	export let data;
 
-	console.log('data:', data);
 	let gameEnded = false;
 
 	const restartGame = () => {
-		invalidateAll().then(() => console.log(data));
-		gameEnded = false;
-		data = data;
+		console.log('restart');
+		invalidateAll().then(() => {
+			gameEnded = false;
+			data = data;
+		});
 	};
 </script>
 
