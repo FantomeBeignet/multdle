@@ -50,7 +50,6 @@
 		invalidateAll().then(() => {
 			gameEnded = false;
 			data = data;
-			console.log(data.word);
 		});
 	};
 
