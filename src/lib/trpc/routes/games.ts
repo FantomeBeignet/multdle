@@ -56,5 +56,10 @@ export const games = t.router({
 				});
 			const dbTime = time ? (time.valueOf() - parseInt(startTime, 10)).toString() : '+inf';
 			await redis.zadd(`game:scoreboard:${room}`, dbTime, player);
-		})
+		}),
+	getPlayersTime: t.procedure.input(z.string()).query(async ({ input }) => {
+		const scoreBoard = await redis.zrange(`game:scoreboard:${input}`, 0, -1);
+		console.log(scoreBoard);
+		return scoreBoard;
+	})
 });
