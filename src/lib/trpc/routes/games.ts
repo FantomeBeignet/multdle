@@ -17,15 +17,23 @@ export const games = t.router({
 	}),
 	getWord: t.procedure.input(z.string()).query(async ({ input }) => {
 		const date = new Date();
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
-		const gameSeed = parseInt(createHash('sha256').update(input).digest('hex'), 16);
-		const seed = gameSeed + hours + minutes;
-		return getRandomWord(seed);
+		const hours = date.getHours().toString();
+		const minutes = date.getMinutes().toString();
+		const gameSeed = parseInt(
+			createHash('sha256').update(input).digest('hex').substring(0, 4),
+			16
+		).toString();
+		const seed = minutes + gameSeed + hours;
+		return getRandomWord(parseInt(seed, 10));
 	}),
 	getSoloWord: t.procedure.query(() => {
 		const seed = getRandomValues(new Int16Array(1))[0];
-		console.log(seed);
 		return getRandomWord(seed);
+	}),
+	markDone: t.procedure.input(z.string()).mutation(({ input }) => {
+		pusherServer.trigger(`presence-game-${input}`, 'game-end', {});
+	}),
+	restart: t.procedure.input(z.string()).mutation(({ input }) => {
+		pusherServer.trigger(`presence-game-${input}`, 'restart', {});
 	})
 });

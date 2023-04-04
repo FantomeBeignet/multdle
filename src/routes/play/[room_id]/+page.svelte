@@ -7,14 +7,17 @@
 	import { trpc } from '$lib/trpc/client';
 	import { page } from '$app/stores';
 	import WordleGrid from '../../../components/WordleGrid.svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	export let data;
 
 	let client: Pusher;
+	let memberId: string;
 
 	let channel: PresenceChannel;
 	let membersPlaying: { id: string; username: string }[] = [];
 	let membersDone: { id: string; username: string }[] = [];
+	let gameEnded = false;
 
 	const addMember = async (memberId: string, username: string) => {
 		if (username) {
@@ -33,13 +36,25 @@
 		if (!member) return;
 		const newDone = [...membersDone, member];
 		membersDone = newDone;
-		const newPlaying = membersPlaying.filter((member) => member !== member);
+		const newPlaying = membersPlaying.filter(({ id, username }) => id !== memberId);
 		membersPlaying = newPlaying;
 	};
 
-	const triggerDone = () => {
+	const triggerDone = async () => {
 		channel.trigger('client-done', {});
-		markMemberDone(client.user.user_data.id);
+		markMemberDone(memberId);
+		if (membersPlaying.length === 0) await trpc($page).games.markDone.mutate(data.roomName);
+	};
+
+	const restartGame = () => {
+		invalidateAll().then(() => {
+			gameEnded = false;
+			data = data;
+		});
+	};
+
+	const triggerRestart = async () => {
+		await trpc($page).games.restart.mutate(data.roomName);
 	};
 
 	onMount(() => {
@@ -49,6 +64,7 @@
 		client.bind('pusher:signin_success', (data: unknown) => {
 			channel = client.subscribe(`presence-game-${roomName}`) as PresenceChannel;
 			channel.bind('pusher:subscription_succeeded', async () => {
+				memberId = channel.members.me.id;
 				channel.members.each(async (member: any) => {
 					addMember(member.id, member.info?.username);
 				});
@@ -60,6 +76,12 @@
 				});
 				channel.bind('client-done', (data: any, metadata: any) => {
 					markMemberDone(metadata.user_id);
+				});
+				channel.bind('game-end', (data: any) => {
+					gameEnded = true;
+				});
+				channel.bind('restart', (data: any) => {
+					restartGame();
 				});
 			});
 		});
@@ -102,8 +124,17 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex flex-col w-full items-center justify-center">
-			<WordleGrid targetWord={data.word} onWin={triggerDone} />
+		<div class="flex flex-col w-full items-center justify-center gap-10">
+			{#key data.word}
+				<WordleGrid targetWord={data.word} onWin={triggerDone} onLose={triggerDone} />
+			{/key}
+			{#if gameEnded}
+				<button
+					on:click={triggerRestart}
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+					>Replay</button
+				>
+			{/if}
 		</div>
 	</div>
 </div>
