@@ -28,7 +28,12 @@ export const games = t.router({
 	}),
 	getSoloWord: t.procedure.query(() => {
 		const seed = getRandomValues(new Int16Array(1))[0];
-		console.log(seed);
 		return getRandomWord(seed);
+	}),
+	markDone: t.procedure.input(z.string()).mutation(({ input }) => {
+		pusherServer.trigger(`presence-game-${input}`, 'game-end', {});
+	}),
+	restart: t.procedure.input(z.string()).mutation(({ input }) => {
+		pusherServer.trigger(`presence-game-${input}`, 'restart', {});
 	})
 });
