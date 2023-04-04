@@ -5,11 +5,13 @@ import { caller } from '$lib/trpc/router';
 import { pusherServer } from '$lib/pusher/server';
 import { getRandomWord } from '$lib/words';
 import { createHash, getRandomValues } from 'crypto';
+import { TRPCError } from '@trpc/server';
 
 export const games = t.router({
 	start: t.procedure.input(z.string()).mutation(async ({ input }) => {
 		pusherServer.trigger(`presence-room-${input}`, 'start', {});
 		caller.rooms.delete(input);
+		await redis.set(`game:starttime:${input}`, new Date().valueOf().toString());
 		return await redis.sadd('games', input);
 	}),
 	exists: t.procedure.input(z.string()).query(async ({ input }) => {
@@ -35,5 +37,24 @@ export const games = t.router({
 	}),
 	restart: t.procedure.input(z.string()).mutation(({ input }) => {
 		pusherServer.trigger(`presence-game-${input}`, 'restart', {});
-	})
+	}),
+	setPlayerTime: t.procedure
+		.input(
+			z.object({
+				room: z.string(),
+				player: z.string(),
+				time: z.date().nullable()
+			})
+		)
+		.mutation(async ({ input }) => {
+			const { room, player, time } = input;
+			const startTime = await redis.get(`game:starttime:${room}`);
+			if (!startTime)
+				return new TRPCError({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'No start time was found for this room'
+				});
+			const dbTime = time ? (time.valueOf() - parseInt(startTime, 10)).toString() : '+inf';
+			await redis.zadd(`game:scoreboard:${room}`, dbTime, player);
+		})
 });
