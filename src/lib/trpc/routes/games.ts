@@ -6,6 +6,7 @@ import { pusherServer } from '$lib/pusher/server';
 import { getRandomWord } from '$lib/words';
 import { createHash, getRandomValues } from 'crypto';
 import { TRPCError } from '@trpc/server';
+import { Console } from 'console';
 
 export const games = t.router({
 	start: t.procedure.input(z.string()).mutation(async ({ input }) => {
@@ -43,7 +44,7 @@ export const games = t.router({
 			z.object({
 				room: z.string(),
 				player: z.string(),
-				time: z.date().nullable()
+				time: z.string().datetime().nullable()
 			})
 		)
 		.mutation(async ({ input }) => {
@@ -54,12 +55,12 @@ export const games = t.router({
 					code: 'INTERNAL_SERVER_ERROR',
 					message: 'No start time was found for this room'
 				});
-			const dbTime = time ? (time.valueOf() - parseInt(startTime, 10)).toString() : '+inf';
-			await redis.zadd(`game:scoreboard:${room}`, dbTime, player);
+			const dbTime = time
+				? (new Date(time).valueOf() - parseInt(startTime, 10)).toString()
+				: '+inf';
+			return redis.zadd(`game:scoreboard:${room}`, dbTime, player);
 		}),
 	getPlayersTime: t.procedure.input(z.string()).query(async ({ input }) => {
-		const scoreBoard = await redis.zrange(`game:scoreboard:${input}`, 0, -1);
-		console.log(scoreBoard);
-		return scoreBoard;
+		return redis.zrange(`game:scoreboard:${input}`, 0, -1);
 	})
 });
