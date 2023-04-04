@@ -8,15 +8,18 @@
 	import { page } from '$app/stores';
 	import WordleGrid from '../../../components/WordleGrid.svelte';
 	import { invalidateAll } from '$app/navigation';
+	import Scoreboard from '../../../components/Scoreboard.svelte';
 
 	export let data;
 
 	let client: Pusher;
 	let memberId: string;
+	let username: string;
 
 	let channel: PresenceChannel;
 	let membersPlaying: { id: string; username: string }[] = [];
 	let membersDone: { id: string; username: string }[] = [];
+	let playerEnded = false;
 	let gameEnded = false;
 
 	const addMember = async (memberId: string, username: string) => {
@@ -49,6 +52,7 @@
 	const restartGame = () => {
 		invalidateAll().then(() => {
 			gameEnded = false;
+			playerEnded = false;
 			data = data;
 		});
 	};
@@ -65,6 +69,7 @@
 			channel = client.subscribe(`presence-game-${roomName}`) as PresenceChannel;
 			channel.bind('pusher:subscription_succeeded', async () => {
 				memberId = channel.members.me.id;
+				username = channel.members.me.info.username;
 				channel.members.each(async (member: any) => {
 					addMember(member.id, member.info?.username);
 				});
@@ -125,9 +130,47 @@
 			</div>
 		</div>
 		<div class="flex flex-col w-full items-center justify-center gap-10">
-			{#key data.word}
-				<WordleGrid targetWord={data.word} onWin={triggerDone} onLose={triggerDone} />
-			{/key}
+			{#if !playerEnded}
+				{#key data.word}
+					<WordleGrid
+						targetWord={data.word}
+						onWin={() => {
+							trpc($page)
+								.games.setPlayerTime.mutate({
+									room: data.roomName,
+									player: username,
+									time: new Date().toString()
+								})
+								.then((res) => {
+									if (res) {
+										triggerDone();
+										playerEnded = true;
+									}
+								});
+						}}
+						onLose={() => {
+							trpc($page)
+								.games.setPlayerTime.mutate({
+									room: data.roomName,
+									player: username,
+									time: null
+								})
+								.then((res) => {
+									if (res) {
+										triggerDone();
+										playerEnded = true;
+									}
+								});
+						}}
+					/>
+				{/key}
+			{:else}
+				{#key membersDone}
+					{#await trpc($page).games.getPlayersTime.query(data.roomName) then players}
+						<Scoreboard {players} />
+					{/await}
+				{/key}
+			{/if}
 			{#if gameEnded}
 				<button
 					on:click={triggerRestart}

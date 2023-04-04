@@ -33,7 +33,24 @@ export const games = t.router({
 	markDone: t.procedure.input(z.string()).mutation(({ input }) => {
 		pusherServer.trigger(`presence-game-${input}`, 'game-end', {});
 	}),
-	restart: t.procedure.input(z.string()).mutation(({ input }) => {
+	restart: t.procedure.input(z.string()).mutation(async ({ input }) => {
+		await redis.del(`game:scoreboard:${input}`);
 		pusherServer.trigger(`presence-game-${input}`, 'restart', {});
+	}),
+	setPlayerTime: t.procedure
+		.input(
+			z.object({
+				room: z.string(),
+				player: z.string(),
+				time: z.string().nullable()
+			})
+		)
+		.mutation(async ({ input }) => {
+			const { room, player, time } = input;
+			const dbTime = time ? new Date(time).valueOf() : '+inf';
+			return redis.zadd(`game:scoreboard:${room}`, dbTime, player);
+		}),
+	getPlayersTime: t.procedure.input(z.string()).query(async ({ input }) => {
+		return redis.zrange(`game:scoreboard:${input}`, 0, -1);
 	})
 });
