@@ -126,7 +126,25 @@
 		</div>
 		<div class="flex flex-col w-full items-center justify-center gap-10">
 			{#key data.word}
-				<WordleGrid targetWord={data.word} onWin={triggerDone} onLose={triggerDone} />
+				<WordleGrid
+					targetWord={data.word}
+					onWin={() => {
+						triggerDone();
+						trpc($page).games.setPlayerTime.mutate({
+							room: data.roomName,
+							player: memberId,
+							time: new Date()
+						});
+					}}
+					onLose={() => {
+						triggerDone();
+						trpc($page).games.setPlayerTime.mutate({
+							room: data.roomName,
+							player: memberId,
+							time: null
+						});
+					}}
+				/>
 			{/key}
 			{#if gameEnded}
 				<button
