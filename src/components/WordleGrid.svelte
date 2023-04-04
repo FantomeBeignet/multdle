@@ -129,7 +129,7 @@
 			grid = grid;
 		} else if (event.key === 'Backspace') {
 			const { rowIndex, cellIndex } = getNextLetter();
-			grid[rowIndex][cellIndex - 1] = '';
+			grid[currentRow][cellIndex > 0 ? cellIndex - 1 : 4] = '';
 			grid = grid;
 		} else if (isLetter && getCurrentWord().length < 5) {
 			writeLetter(event.key, getNextLetter());
