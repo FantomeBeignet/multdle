@@ -123,6 +123,7 @@
 			const { rowIndex, cellIndex } = getNextLetter();
 			if (gameWon !== 1 && rowIndex === -1 && cellIndex === -1) {
 				gameLost = 1;
+				onLose();
 			}
 			// grid.splice(); // Apparemment il y a besoin de ça car Svelte actualise pas toujours les tableaux
 			grid = grid;
