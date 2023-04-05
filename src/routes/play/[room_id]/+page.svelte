@@ -53,6 +53,11 @@
 		invalidateAll().then(() => {
 			gameEnded = false;
 			playerEnded = false;
+			membersPlaying = [];
+			membersDone = [];
+			channel.members.each((member: any) => {
+				addMember(member.id, member.info.username);
+			});
 			data = data;
 		});
 	};
