@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { words } from '$lib/words';
+
 	export let targetWord: string;
 	export let onWin: () => void;
 	export let onLose: () => void;
@@ -117,7 +119,11 @@
 	function handleKeyDown(event: KeyboardEvent) {
 		const key = event.key.toUpperCase();
 		const isLetter = /^[A-Z]$/.test(key);
-		if (event.key === 'Enter' && getCurrentWord().length === 5) {
+		if (
+			event.key === 'Enter' &&
+			getCurrentWord().length === 5 &&
+			words.includes(getCurrentWord().toLowerCase())
+		) {
 			verifyWord(targetWord, getCurrentWord());
 			currentRow = (currentRow + 1) % 5;
 			const { rowIndex, cellIndex } = getNextLetter();
